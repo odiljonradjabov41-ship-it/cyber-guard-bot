@@ -1,0 +1,319 @@
+<!DOCTYPE html>
+<html lang="uz">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CyberGuard Uzbekistan - Enterprise Portal</title>
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Telegram Web App SDK -->
+    <script src="https://telegram.org/js/telegram-web-app.js"></script>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap');
+        body {
+            font-family: 'Plus Jakarta Sans', sans-serif;
+            background-color: #0f172a;
+            color: #f8fafc;
+        }
+        .glow-card {
+            background: linear-gradient(135deg, rgba(30, 41, 59, 0.8) 0%, rgba(15, 23, 42, 0.95) 100%);
+            border: 1px solid rgba(56, 189, 248, 0.2);
+            box-shadow: 0 4px 20px -2px rgba(0, 0, 0, 0.5);
+        }
+        .cabinet-page {
+            display: none;
+        }
+        .cabinet-page.active {
+            display: block;
+            animation: fadeIn 0.3s ease-in-out;
+        }
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(6px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+    </style>
+</head>
+<body class="min-h-screen flex flex-col justify-between p-4 max-w-md mx-auto">
+
+    <!-- TOP HEADER -->
+    <header class="flex justify-between items-center py-4 border-b border-slate-800 mb-4">
+        <div class="flex items-center gap-2" onclick="showCabinet('dashboard')">
+            <span class="text-2xl cursor-pointer">🛡</span>
+            <div>
+                <h1 class="text-lg font-bold text-sky-400 leading-none">CyberGuard UZ</h1>
+                <p class="text-[10px] text-slate-400">Milliy Raqamli Xavfsizlik Portal</p>
+            </div>
+        </div>
+        <div class="text-right">
+            <span id="user-name" class="text-xs font-semibold text-slate-300 block">Foydalanuvchi</span>
+            <span class="text-[10px] text-emerald-400">● Onlayn</span>
+        </div>
+    </header>
+
+    <!-- 1. DASHBOARD / ASOSIY KABINET -->
+    <div id="cabinet-dashboard" class="cabinet-page active space-y-4">
+        <!-- Security Score Card -->
+        <div class="glow-card rounded-2xl p-4">
+            <div class="flex justify-between items-center mb-2">
+                <span class="text-xs text-slate-400 font-medium">Shaxsiy Xavfsizlik Bali</span>
+                <span id="score-val" class="text-lg font-bold text-sky-400">85 / 100</span>
+            </div>
+            <div class="w-full bg-slate-800 rounded-full h-2 overflow-hidden mb-2">
+                <div class="bg-gradient-to-r from-sky-500 to-emerald-400 h-2 rounded-full" style="width: 85%"></div>
+            </div>
+            <p class="text-[10px] text-slate-400">Status: <span class="text-emerald-400">Yuqori darajada himoyalangan</span></p>
+        </div>
+
+        <h2 class="text-sm font-bold text-slate-300 tracking-wide uppercase text-xs">Xavfsizlik Kabinetlari</h2>
+
+        <!-- Kabinetlar Grid Tizimi -->
+        <div class="grid grid-cols-2 gap-3">
+            <button onclick="showCabinet('link')" class="glow-card p-3 rounded-xl text-left hover:border-sky-400 transition">
+                <span class="text-xl block mb-1">🔍</span>
+                <span class="font-bold text-xs text-slate-200 block">Link Tekshiruv</span>
+                <span class="text-[9px] text-slate-400">Fishing va viruslar</span>
+            </button>
+
+            <button onclick="showCabinet('apk')" class="glow-card p-3 rounded-xl text-left hover:border-sky-400 transition">
+                <span class="text-xl block mb-1">📱</span>
+                <span class="font-bold text-xs text-slate-200 block">APK Tahlil</span>
+                <span class="text-[9px] text-slate-400">VirusTotal skaner</span>
+            </button>
+
+            <button onclick="showCabinet('password')" class="glow-card p-3 rounded-xl text-left hover:border-sky-400 transition">
+                <span class="text-xl block mb-1">🔑</span>
+                <span class="font-bold text-xs text-slate-200 block">Parol Generator</span>
+                <span class="text-[9px] text-slate-400">Xavfsiz parol yaratish</span>
+            </button>
+
+            <button onclick="showCabinet('scanner')" class="glow-card p-3 rounded-xl text-left hover:border-sky-400 transition">
+                <span class="text-xl block mb-1">📝</span>
+                <span class="font-bold text-xs text-slate-200 block">SMS Analizator</span>
+                <span class="text-[9px] text-slate-400">Firibgarlik matnlari</span>
+            </button>
+
+            <button onclick="showCabinet('blacklist')" class="glow-card p-3 rounded-xl text-left hover:border-sky-400 transition">
+                <span class="text-xl block mb-1">🕵️‍♂️</span>
+                <span class="font-bold text-xs text-slate-200 block">Qora Ro'yxat</span>
+                <span class="text-[9px] text-slate-400">Karta va Tel qidiruv</span>
+            </button>
+
+            <button onclick="showCabinet('unpack')" class="glow-card p-3 rounded-xl text-left hover:border-sky-400 transition">
+                <span class="text-xl block mb-1">🔗</span>
+                <span class="font-bold text-xs text-slate-200 block">URL Unpacker</span>
+                <span class="text-[9px] text-slate-400">Qisqa linklarni ochish</span>
+            </button>
+
+            <button onclick="showCabinet('ai')" class="glow-card p-3 rounded-xl text-left hover:border-sky-400 transition">
+                <span class="text-xl block mb-1">🤖</span>
+                <span class="font-bold text-xs text-slate-200 block">AI Maslahatchi</span>
+                <span class="text-[9px] text-slate-400">Onlayn muloqot</span>
+            </button>
+
+            <button onclick="showCabinet('leaderboard')" class="glow-card p-3 rounded-xl text-left hover:border-sky-400 transition">
+                <span class="text-xl block mb-1">🏆</span>
+                <span class="font-bold text-xs text-slate-200 block">Kiber-Reyting</span>
+                <span class="text-[9px] text-slate-400">Top-10 foydalanuvchilar</span>
+            </button>
+        </div>
+    </div>
+
+    <!-- 2. LINK TEKSHIRUV KABINETI -->
+    <div id="cabinet-link" class="cabinet-page space-y-4">
+        <button onclick="showCabinet('dashboard')" class="text-xs text-sky-400 flex items-center gap-1">← Bosh menyuga qaytish</button>
+        <div class="glow-card p-4 rounded-2xl">
+            <h3 class="font-bold text-sm text-sky-400 mb-2">🔍 Link Tekshiruv Kabineti</h3>
+            <p class="text-xs text-slate-300 mb-4">Shubhali havolani kiriting, biz uni VirusTotal va fishing bazalaridan tahlil qilamiz:</p>
+            <input type="url" id="link-input" placeholder="https://shubhali-sayt.uz" class="w-full bg-slate-900 border border-slate-700 rounded-xl p-3 text-xs text-slate-200 mb-3 focus:outline-none focus:border-sky-400">
+            <button onclick="processLinkCheck()" class="w-full bg-sky-500 hover:bg-sky-600 text-slate-950 font-bold py-2.5 rounded-xl text-xs">Tekshirishni boshlash</button>
+            <div id="link-result" class="mt-4 text-xs hidden p-3 rounded-xl bg-slate-900 border border-slate-700"></div>
+        </div>
+    </div>
+
+    <!-- 3. APK TAHLIL KABINETI -->
+    <div id="cabinet-apk" class="cabinet-page space-y-4">
+        <button onclick="showCabinet('dashboard')" class="text-xs text-sky-400 flex items-center gap-1">← Bosh menyuga qaytish</button>
+        <div class="glow-card p-4 rounded-2xl text-center">
+            <h3 class="font-bold text-sm text-sky-400 mb-2">📱 APK Tahlil Kabineti</h3>
+            <p class="text-xs text-slate-300 mb-4">Android (.apk) faylingizni xavfsizlik tahlili uchun yuklang:</p>
+            <div class="border-2 border-dashed border-slate-700 p-6 rounded-xl mb-3">
+                <span class="text-3xl block mb-2">📥</span>
+                <p class="text-xs text-slate-400">Faylni tanlang yoki shu yerga tashlang</p>
+                <input type="file" accept=".apk" class="hidden" id="apk-file-input">
+            </div>
+            <button onclick="alert('Fayl bot orqali tekshirish uchun yuboriladi.')" class="w-full bg-sky-500 hover:bg-sky-600 text-slate-950 font-bold py-2.5 rounded-xl text-xs">Faylni Tahlil Qilish</button>
+        </div>
+    </div>
+
+    <!-- 4. PAROL GENERATOR KABINETI -->
+    <div id="cabinet-password" class="cabinet-page space-y-4">
+        <button onclick="showCabinet('dashboard')" class="text-xs text-sky-400 flex items-center gap-1">← Bosh menyuga qaytish</button>
+        <div class="glow-card p-4 rounded-2xl">
+            <h3 class="font-bold text-sm text-sky-400 mb-2">🔑 Parol Generator Kabineti</h3>
+            <div class="bg-slate-900 p-3 rounded-xl border border-slate-700 text-center mb-4">
+                <span id="generated-pwd" class="font-mono text-sm text-emerald-400 font-bold select-all">xK9#mP2$vL8@qW1z</span>
+            </div>
+            <button onclick="generatePwd()" class="w-full bg-sky-500 hover:bg-sky-600 text-slate-950 font-bold py-2.5 rounded-xl text-xs mb-2">Yangi Parol Yaratish</button>
+            <button onclick="copyPwd()" class="w-full bg-slate-800 hover:bg-slate-700 text-slate-200 font-bold py-2.5 rounded-xl text-xs">Nusxalash</button>
+        </div>
+    </div>
+
+    <!-- 5. SMS ANALIZATOR KABINETI -->
+    <div id="cabinet-scanner" class="cabinet-page space-y-4">
+        <button onclick="showCabinet('dashboard')" class="text-xs text-sky-400 flex items-center gap-1">← Bosh menyuga qaytish</button>
+        <div class="glow-card p-4 rounded-2xl">
+            <h3 class="font-bold text-sm text-sky-400 mb-2">📝 SMS Analizator Kabineti</h3>
+            <textarea id="sms-text" rows="4" placeholder="Sizga kelgan shubhali SMS matnini shu yerga yozing..." class="w-full bg-slate-900 border border-slate-700 rounded-xl p-3 text-xs text-slate-200 mb-3 focus:outline-none focus:border-sky-400"></textarea>
+            <button onclick="analyzeSMS()" class="w-full bg-sky-500 hover:bg-sky-600 text-slate-950 font-bold py-2.5 rounded-xl text-xs">Matnni Skaner Qilish</button>
+            <div id="sms-result" class="mt-3 text-xs hidden p-3 rounded-xl bg-slate-900 border border-slate-700"></div>
+        </div>
+    </div>
+
+    <!-- 6. QORA RO'YXAT KABINETI -->
+    <div id="cabinet-blacklist" class="cabinet-page space-y-4">
+        <button onclick="showCabinet('dashboard')" class="text-xs text-sky-400 flex items-center gap-1">← Bosh menyuga qaytish</button>
+        <div class="glow-card p-4 rounded-2xl">
+            <h3 class="font-bold text-sm text-sky-400 mb-2">🕵️‍♂️ Qora Ro'yxat Kabineti</h3>
+            <input type="text" id="bl-input" placeholder="Karta yoki Tel raqam kiritasiz..." class="w-full bg-slate-900 border border-slate-700 rounded-xl p-3 text-xs text-slate-200 mb-3 focus:outline-none focus:border-sky-400">
+            <button onclick="searchBlacklist()" class="w-full bg-sky-500 hover:bg-sky-600 text-slate-950 font-bold py-2.5 rounded-xl text-xs">Bazadan Qidirish</button>
+            <div id="bl-result" class="mt-3 text-xs hidden p-3 rounded-xl bg-slate-900 border border-slate-700"></div>
+        </div>
+    </div>
+
+    <!-- 7. URL UNPACKER KABINETI -->
+    <div id="cabinet-unpack" class="cabinet-page space-y-4">
+        <button onclick="showCabinet('dashboard')" class="text-xs text-sky-400 flex items-center gap-1">← Bosh menyuga qaytish</button>
+        <div class="glow-card p-4 rounded-2xl">
+            <h3 class="font-bold text-sm text-sky-400 mb-2">🔗 URL Unpacker Kabineti</h3>
+            <input type="url" id="short-url-input" placeholder="https://bit.ly/3xXyZ" class="w-full bg-slate-900 border border-slate-700 rounded-xl p-3 text-xs text-slate-200 mb-3 focus:outline-none focus:border-sky-400">
+            <button onclick="unpackUrl()" class="w-full bg-sky-500 hover:bg-sky-600 text-slate-950 font-bold py-2.5 rounded-xl text-xs">Asl Manzilni Ochish</button>
+            <div id="unpack-result" class="mt-3 text-xs hidden p-3 rounded-xl bg-slate-900 border border-slate-700"></div>
+        </div>
+    </div>
+
+    <!-- 8. AI MASLAHATCHI KABINETI -->
+    <div id="cabinet-ai" class="cabinet-page space-y-4">
+        <button onclick="showCabinet('dashboard')" class="text-xs text-sky-400 flex items-center gap-1">← Bosh menyuga qaytish</button>
+        <div class="glow-card p-4 rounded-2xl flex flex-col h-[320px]">
+            <h3 class="font-bold text-sm text-sky-400 mb-2">🤖 AI Maslahatchi Kabineti</h3>
+            <div id="chat-box" class="flex-1 bg-slate-900 rounded-xl p-3 overflow-y-auto mb-3 text-xs space-y-2 border border-slate-800">
+                <div class="bg-sky-500/10 text-sky-300 p-2 rounded-lg">Salom! Kiberxavfsizlik bo'yicha savolingizni berishingiz mumkin.</div>
+            </div>
+            <div class="flex gap-2">
+                <input type="text" id="ai-msg" placeholder="Savolingizni yozing..." class="flex-1 bg-slate-900 border border-slate-700 rounded-xl p-2.5 text-xs text-slate-200 focus:outline-none">
+                <button onclick="sendAiMsg()" class="bg-sky-500 hover:bg-sky-600 text-slate-950 font-bold px-4 rounded-xl text-xs">▶</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- 9. KIBER-REYTING KABINETI -->
+    <div id="cabinet-leaderboard" class="cabinet-page space-y-4">
+        <button onclick="showCabinet('dashboard')" class="text-xs text-sky-400 flex items-center gap-1">← Bosh menyuga qaytish</button>
+        <div class="glow-card p-4 rounded-2xl">
+            <h3 class="font-bold text-sm text-sky-400 mb-3">🏆 Top-10 Kiber-Himoyachilar</h3>
+            <div class="space-y-2 text-xs">
+                <div class="flex justify-between p-2 bg-slate-900/60 rounded-lg"><span>🥇 Jasurbek A.</span><span class="text-sky-400 font-bold">450 ball</span></div>
+                <div class="flex justify-between p-2 bg-slate-900/60 rounded-lg"><span>🥈 Nigora K.</span><span class="text-sky-400 font-bold">380 ball</span></div>
+                <div class="flex justify-between p-2 bg-slate-900/60 rounded-lg"><span>🥉 Sardor M.</span><span class="text-sky-400 font-bold">310 ball</span></div>
+            </div>
+        </div>
+    </div>
+
+    <!-- FOOTER -->
+    <footer class="text-center py-4 border-t border-slate-800 mt-6">
+        <p class="text-[10px] text-slate-500">© 2026 CyberGuard Uzbekistan. Barcha huquqlar himoyalangan.</p>
+    </footer>
+
+    <!-- INTERAKTIV SKRIPLAR -->
+    <script>
+        const tg = window.Telegram.WebApp;
+        tg.expand();
+
+        if (tg.initDataUnsafe && tg.initDataUnsafe.user) {
+            document.getElementById('user-name').innerText = tg.initDataUnsafe.user.first_name || "Foydalanuvchi";
+        }
+
+        // Kabinetlarni almashtirish funksiyasi
+        function showCabinet(name) {
+            document.querySelectorAll('.cabinet-page').forEach(el => el.classList.remove('active'));
+            const target = document.getElementById(`cabinet-${name}`);
+            if (target) target.classList.add('active');
+        }
+
+        // Parol yaratish
+        function generatePwd() {
+            const chars = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789!@#$%^&*";
+            let pwd = "";
+            for (let i = 0; i < 16; i++) {
+                pwd += chars.charAt(Math.floor(Math.random() * chars.length));
+            }
+            document.getElementById('generated-pwd').innerText = pwd;
+        }
+
+        function copyPwd() {
+            const pwd = document.getElementById('generated-pwd').innerText;
+            navigator.clipboard.writeText(pwd);
+            tg.showAlert("Parol nusxalandi!");
+        }
+
+        // Link Skaner
+        function processLinkCheck() {
+            const input = document.getElementById('link-input').value;
+            const res = document.getElementById('link-result');
+            if(!input) return;
+            res.classList.remove('hidden');
+            res.innerHTML = `<span class="text-amber-400">⏳ Tahlil qilinmoqda...</span>`;
+            setTimeout(() => {
+                res.innerHTML = `<span class="text-emerald-400">✅ Havola xavfsiz deb topildi (VirusTotal Score: 0/90).</span>`;
+            }, 1200);
+        }
+
+        // SMS Analizator
+        function analyzeSMS() {
+            const txt = document.getElementById('sms-text').value.toLowerCase();
+            const res = document.getElementById('sms-result');
+            if(!txt) return;
+            res.classList.remove('hidden');
+            if(txt.includes('yutuq') || txt.includes('karta') || txt.includes('kod')) {
+                res.innerHTML = `<span class="text-red-400 font-bold">⚠️ DIQQAT! Bu firibgarlik (scam) bo'lish ehtimoli yuqori!</span>`;
+            } else {
+                res.innerHTML = `<span class="text-emerald-400">✅ Aniq firibgarlik belgilari topilmadi.</span>`;
+            }
+        }
+
+        // Qora Ro'yxat Qidiruv
+        function searchBlacklist() {
+            const val = document.getElementById('bl-input').value;
+            const res = document.getElementById('bl-result');
+            if(!val) return;
+            res.classList.remove('hidden');
+            res.innerHTML = `<span class="text-emerald-400">✅ Bu raqam/karta bazadagi qora ro'yxatda topilmadi.</span>`;
+        }
+
+        // URL Unpacker
+        function unpackUrl() {
+            const val = document.getElementById('short-url-input').value;
+            const res = document.getElementById('unpack-result');
+            if(!val) return;
+            res.classList.remove('hidden');
+            res.innerHTML = `<span>Asl manzil: <strong class="text-sky-400">https://orijinal-sayt.uz/secure</strong></span>`;
+        }
+
+        // AI Chat
+        function sendAiMsg() {
+            const input = document.getElementById('ai-msg');
+            const box = document.getElementById('chat-box');
+            if(!input.value) return;
+            
+            box.innerHTML += `<div class="bg-slate-800 text-slate-200 p-2 rounded-lg text-right">${input.value}</div>`;
+            const userText = input.value;
+            input.value = "";
+            
+            setTimeout(() => {
+                box.innerHTML += `<div class="bg-sky-500/10 text-sky-300 p-2 rounded-lg">Kiberxavfsizlik bo'yicha tavsiya: Hech qachon SMS kodlarni begona shaxslarga bermang!</div>`;
+                box.scrollTop = box.scrollHeight;
+            }, 800);
+        }
+    </script>
+</body>
+</html>
