@@ -4,9 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>CyberGuard Uzbekistan - Enterprise Portal</title>
-    <!-- Tailwind CSS CDN -->
     <script src="https://cdn.tailwindcss.com"></script>
-    <!-- Telegram Web App SDK -->
     <script src="https://telegram.org/js/telegram-web-app.js"></script>
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap');
@@ -37,16 +35,16 @@
 
     <!-- TOP HEADER -->
     <header class="flex justify-between items-center py-4 border-b border-slate-800 mb-4">
-        <div class="flex items-center gap-2" onclick="showCabinet('dashboard')">
-            <span class="text-2xl cursor-pointer">🛡</span>
+        <div class="flex items-center gap-3" onclick="showCabinet('dashboard')">
+            <img id="user-photo" src="https://ui-avatars.com/api/?name=User&background=0284c7&color=fff" class="w-10 h-10 rounded-full border border-sky-400" alt="Avatar">
             <div>
-                <h1 class="text-lg font-bold text-sky-400 leading-none">CyberGuard UZ</h1>
-                <p class="text-[10px] text-slate-400">Milliy Raqamli Xavfsizlik Portal</p>
+                <h1 class="text-base font-bold text-sky-400 leading-none" id="user-name">Foydalanuvchi</h1>
+                <p class="text-[10px] text-slate-400" id="user-id">ID: 00000000</p>
             </div>
         </div>
         <div class="text-right">
-            <span id="user-name" class="text-xs font-semibold text-slate-300 block">Foydalanuvchi</span>
-            <span class="text-[10px] text-emerald-400">● Onlayn</span>
+            <span class="text-[10px] text-emerald-400 block font-semibold">● Onlayn</span>
+            <span id="user-points" class="text-xs font-bold text-amber-400">🏆 0 ball</span>
         </div>
     </header>
 
@@ -64,7 +62,7 @@
             <p class="text-[10px] text-slate-400">Status: <span class="text-emerald-400">Yuqori darajada himoyalangan</span></p>
         </div>
 
-        <h2 class="text-sm font-bold text-slate-300 tracking-wide uppercase text-xs">Xavfsizlik Kabinetlari</h2>
+        <h2 class="text-xs font-bold text-slate-300 tracking-wide uppercase">Xavfsizlik Kabinetlari</h2>
 
         <!-- Kabinetlar Grid Tizimi -->
         <div class="grid grid-cols-2 gap-3">
@@ -92,28 +90,28 @@
                 <span class="text-[9px] text-slate-400">Firibgarlik matnlari</span>
             </button>
 
+            <button onclick="showCabinet('quiz')" class="glow-card p-3 rounded-xl text-left hover:border-sky-400 transition border-amber-500/40">
+                <span class="text-xl block mb-1">🎯</span>
+                <span class="font-bold text-xs text-amber-300 block">Kiber-Viktorina</span>
+                <span class="text-[9px] text-slate-400">Test yechib ball ol</span>
+            </button>
+
+            <button onclick="showCabinet('history')" class="glow-card p-3 rounded-xl text-left hover:border-sky-400 transition">
+                <span class="text-xl block mb-1">📜</span>
+                <span class="font-bold text-xs text-slate-200 block">Mening Tarixim</span>
+                <span class="text-[9px] text-slate-400">Tekshiruvlar tarixi</span>
+            </button>
+
             <button onclick="showCabinet('blacklist')" class="glow-card p-3 rounded-xl text-left hover:border-sky-400 transition">
                 <span class="text-xl block mb-1">🕵️‍♂️</span>
                 <span class="font-bold text-xs text-slate-200 block">Qora Ro'yxat</span>
                 <span class="text-[9px] text-slate-400">Karta va Tel qidiruv</span>
             </button>
 
-            <button onclick="showCabinet('unpack')" class="glow-card p-3 rounded-xl text-left hover:border-sky-400 transition">
-                <span class="text-xl block mb-1">🔗</span>
-                <span class="font-bold text-xs text-slate-200 block">URL Unpacker</span>
-                <span class="text-[9px] text-slate-400">Qisqa linklarni ochish</span>
-            </button>
-
             <button onclick="showCabinet('ai')" class="glow-card p-3 rounded-xl text-left hover:border-sky-400 transition">
                 <span class="text-xl block mb-1">🤖</span>
                 <span class="font-bold text-xs text-slate-200 block">AI Maslahatchi</span>
                 <span class="text-[9px] text-slate-400">Onlayn muloqot</span>
-            </button>
-
-            <button onclick="showCabinet('leaderboard')" class="glow-card p-3 rounded-xl text-left hover:border-sky-400 transition">
-                <span class="text-xl block mb-1">🏆</span>
-                <span class="font-bold text-xs text-slate-200 block">Kiber-Reyting</span>
-                <span class="text-[9px] text-slate-400">Top-10 foydalanuvchilar</span>
             </button>
         </div>
     </div>
@@ -130,7 +128,35 @@
         </div>
     </div>
 
-    <!-- 3. APK TAHLIL KABINETI -->
+    <!-- 3. KIBER-VIKTORINA KABINETI -->
+    <div id="cabinet-quiz" class="cabinet-page space-y-4">
+        <button onclick="showCabinet('dashboard')" class="text-xs text-sky-400 flex items-center gap-1">← Bosh menyuga qaytish</button>
+        <div class="glow-card p-4 rounded-2xl space-y-3">
+            <h3 class="font-bold text-sm text-amber-400">🎯 Kiber-Viktorina</h3>
+            <p id="quiz-question" class="text-xs text-slate-200 font-semibold">Savol: Telegram bot sizdan bank karta SMS kodini so'rasa nima qilasiz?</p>
+            <div id="quiz-options" class="space-y-2">
+                <button onclick="checkQuiz(false)" class="w-full bg-slate-900 hover:bg-slate-800 p-2.5 text-xs text-left rounded-xl border border-slate-700 text-slate-300">A) Kodni darhol yuboraman</button>
+                <button onclick="checkQuiz(true)" class="w-full bg-slate-900 hover:bg-slate-800 p-2.5 text-xs text-left rounded-xl border border-slate-700 text-slate-300">B) Kodni bermayman, bu firibgarlik</button>
+            </div>
+            <div id="quiz-result" class="text-xs hidden p-2 rounded-xl"></div>
+        </div>
+    </div>
+
+    <!-- 4. MENING TARIXIM KABINETI -->
+    <div id="cabinet-history" class="cabinet-page space-y-4">
+        <button onclick="showCabinet('dashboard')" class="text-xs text-sky-400 flex items-center gap-1">← Bosh menyuga qaytish</button>
+        <div class="glow-card p-4 rounded-2xl">
+            <div class="flex justify-between items-center mb-3">
+                <h3 class="font-bold text-sm text-sky-400">📜 Tekshiruvlar Tarixi</h3>
+                <button onclick="clearHistory()" class="text-[10px] text-red-400">Tarixni tozalash</button>
+            </div>
+            <div id="history-list" class="space-y-2 text-xs max-h-[250px] overflow-y-auto">
+                <p class="text-slate-500 text-center py-4">Hali hech narsa tekshirilmadi.</p>
+            </div>
+        </div>
+    </div>
+
+    <!-- 5. APK TAHLIL -->
     <div id="cabinet-apk" class="cabinet-page space-y-4">
         <button onclick="showCabinet('dashboard')" class="text-xs text-sky-400 flex items-center gap-1">← Bosh menyuga qaytish</button>
         <div class="glow-card p-4 rounded-2xl text-center">
@@ -138,14 +164,13 @@
             <p class="text-xs text-slate-300 mb-4">Android (.apk) faylingizni xavfsizlik tahlili uchun yuklang:</p>
             <div class="border-2 border-dashed border-slate-700 p-6 rounded-xl mb-3">
                 <span class="text-3xl block mb-2">📥</span>
-                <p class="text-xs text-slate-400">Faylni tanlang yoki shu yerga tashlang</p>
-                <input type="file" accept=".apk" class="hidden" id="apk-file-input">
+                <p class="text-xs text-slate-400">Faylni tanlang</p>
             </div>
-            <button onclick="alert('Fayl bot orqali tekshirish uchun yuboriladi.')" class="w-full bg-sky-500 hover:bg-sky-600 text-slate-950 font-bold py-2.5 rounded-xl text-xs">Faylni Tahlil Qilish</button>
+            <button onclick="triggerHaptic(); alert('Fayl bot orqali tekshirish uchun yuboriladi.')" class="w-full bg-sky-500 hover:bg-sky-600 text-slate-950 font-bold py-2.5 rounded-xl text-xs">Faylni Tahlil Qilish</button>
         </div>
     </div>
 
-    <!-- 4. PAROL GENERATOR KABINETI -->
+    <!-- 6. PAROL GENERATOR -->
     <div id="cabinet-password" class="cabinet-page space-y-4">
         <button onclick="showCabinet('dashboard')" class="text-xs text-sky-400 flex items-center gap-1">← Bosh menyuga qaytish</button>
         <div class="glow-card p-4 rounded-2xl">
@@ -158,7 +183,7 @@
         </div>
     </div>
 
-    <!-- 5. SMS ANALIZATOR KABINETI -->
+    <!-- 7. SMS ANALIZATOR -->
     <div id="cabinet-scanner" class="cabinet-page space-y-4">
         <button onclick="showCabinet('dashboard')" class="text-xs text-sky-400 flex items-center gap-1">← Bosh menyuga qaytish</button>
         <div class="glow-card p-4 rounded-2xl">
@@ -169,29 +194,18 @@
         </div>
     </div>
 
-    <!-- 6. QORA RO'YXAT KABINETI -->
+    <!-- 8. QORA RO'YXAT -->
     <div id="cabinet-blacklist" class="cabinet-page space-y-4">
         <button onclick="showCabinet('dashboard')" class="text-xs text-sky-400 flex items-center gap-1">← Bosh menyuga qaytish</button>
         <div class="glow-card p-4 rounded-2xl">
             <h3 class="font-bold text-sm text-sky-400 mb-2">🕵️‍♂️ Qora Ro'yxat Kabineti</h3>
-            <input type="text" id="bl-input" placeholder="Karta yoki Tel raqam kiritasiz..." class="w-full bg-slate-900 border border-slate-700 rounded-xl p-3 text-xs text-slate-200 mb-3 focus:outline-none focus:border-sky-400">
+            <input type="text" id="bl-input" placeholder="Karta yoki Tel raqam..." class="w-full bg-slate-900 border border-slate-700 rounded-xl p-3 text-xs text-slate-200 mb-3 focus:outline-none focus:border-sky-400">
             <button onclick="searchBlacklist()" class="w-full bg-sky-500 hover:bg-sky-600 text-slate-950 font-bold py-2.5 rounded-xl text-xs">Bazadan Qidirish</button>
             <div id="bl-result" class="mt-3 text-xs hidden p-3 rounded-xl bg-slate-900 border border-slate-700"></div>
         </div>
     </div>
 
-    <!-- 7. URL UNPACKER KABINETI -->
-    <div id="cabinet-unpack" class="cabinet-page space-y-4">
-        <button onclick="showCabinet('dashboard')" class="text-xs text-sky-400 flex items-center gap-1">← Bosh menyuga qaytish</button>
-        <div class="glow-card p-4 rounded-2xl">
-            <h3 class="font-bold text-sm text-sky-400 mb-2">🔗 URL Unpacker Kabineti</h3>
-            <input type="url" id="short-url-input" placeholder="https://bit.ly/3xXyZ" class="w-full bg-slate-900 border border-slate-700 rounded-xl p-3 text-xs text-slate-200 mb-3 focus:outline-none focus:border-sky-400">
-            <button onclick="unpackUrl()" class="w-full bg-sky-500 hover:bg-sky-600 text-slate-950 font-bold py-2.5 rounded-xl text-xs">Asl Manzilni Ochish</button>
-            <div id="unpack-result" class="mt-3 text-xs hidden p-3 rounded-xl bg-slate-900 border border-slate-700"></div>
-        </div>
-    </div>
-
-    <!-- 8. AI MASLAHATCHI KABINETI -->
+    <!-- 9. AI MASLAHATCHI -->
     <div id="cabinet-ai" class="cabinet-page space-y-4">
         <button onclick="showCabinet('dashboard')" class="text-xs text-sky-400 flex items-center gap-1">← Bosh menyuga qaytish</button>
         <div class="glow-card p-4 rounded-2xl flex flex-col h-[320px]">
@@ -206,113 +220,161 @@
         </div>
     </div>
 
-    <!-- 9. KIBER-REYTING KABINETI -->
-    <div id="cabinet-leaderboard" class="cabinet-page space-y-4">
-        <button onclick="showCabinet('dashboard')" class="text-xs text-sky-400 flex items-center gap-1">← Bosh menyuga qaytish</button>
-        <div class="glow-card p-4 rounded-2xl">
-            <h3 class="font-bold text-sm text-sky-400 mb-3">🏆 Top-10 Kiber-Himoyachilar</h3>
-            <div class="space-y-2 text-xs">
-                <div class="flex justify-between p-2 bg-slate-900/60 rounded-lg"><span>🥇 Jasurbek A.</span><span class="text-sky-400 font-bold">450 ball</span></div>
-                <div class="flex justify-between p-2 bg-slate-900/60 rounded-lg"><span>🥈 Nigora K.</span><span class="text-sky-400 font-bold">380 ball</span></div>
-                <div class="flex justify-between p-2 bg-slate-900/60 rounded-lg"><span>🥉 Sardor M.</span><span class="text-sky-400 font-bold">310 ball</span></div>
-            </div>
-        </div>
-    </div>
-
     <!-- FOOTER -->
     <footer class="text-center py-4 border-t border-slate-800 mt-6">
         <p class="text-[10px] text-slate-500">© 2026 CyberGuard Uzbekistan. Barcha huquqlar himoyalangan.</p>
     </footer>
 
-    <!-- INTERAKTIV SKRIPLAR -->
+    <!-- SKRIPTLAR -->
     <script>
         const tg = window.Telegram.WebApp;
         tg.expand();
 
+        let userPoints = parseInt(localStorage.getItem('cyber_points') || '10');
+
+        // User ma'lumotlarini yuklash
         if (tg.initDataUnsafe && tg.initDataUnsafe.user) {
-            document.getElementById('user-name').innerText = tg.initDataUnsafe.user.first_name || "Foydalanuvchi";
+            const u = tg.initDataUnsafe.user;
+            document.getElementById('user-name').innerText = u.first_name || "Foydalanuvchi";
+            document.getElementById('user-id').innerText = `ID: ${u.id || '00000000'}`;
+            if (u.photo_url) document.getElementById('user-photo').src = u.photo_url;
+        }
+        updatePointsDisplay();
+
+        function triggerHaptic() {
+            if (tg.HapticFeedback) tg.HapticFeedback.impactOccurred('medium');
         }
 
-        // Kabinetlarni almashtirish funksiyasi
         function showCabinet(name) {
+            triggerHaptic();
             document.querySelectorAll('.cabinet-page').forEach(el => el.classList.remove('active'));
             const target = document.getElementById(`cabinet-${name}`);
             if (target) target.classList.add('active');
+            if (name === 'history') renderHistory();
         }
 
-        // Parol yaratish
-        function generatePwd() {
-            const chars = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789!@#$%^&*";
-            let pwd = "";
-            for (let i = 0; i < 16; i++) {
-                pwd += chars.charAt(Math.floor(Math.random() * chars.length));
+        function updatePointsDisplay() {
+            document.getElementById('user-points').innerText = `🏆 ${userPoints} ball`;
+            localStorage.setItem('cyber_points', userPoints);
+        }
+
+        // LocalStorage History
+        function saveToHistory(type, val, status) {
+            let history = JSON.parse(localStorage.getItem('cyber_history') || '[]');
+            history.unshift({ type, val, status, date: new Date().toLocaleTimeString() });
+            localStorage.setItem('cyber_history', JSON.stringify(history.slice(0, 15)));
+        }
+
+        function renderHistory() {
+            const list = document.getElementById('history-list');
+            let history = JSON.parse(localStorage.getItem('cyber_history') || '[]');
+            if (history.length === 0) {
+                list.innerHTML = `<p class="text-slate-500 text-center py-4">Hali hech narsa tekshirilmadi.</p>`;
+                return;
             }
-            document.getElementById('generated-pwd').innerText = pwd;
+            list.innerHTML = history.map(item => `
+                <div class="bg-slate-900/80 p-2.5 rounded-xl border border-slate-800 flex justify-between items-center">
+                    <div>
+                        <span class="font-bold text-sky-400">${item.type}</span>: <span class="text-slate-300">${item.val}</span>
+                        <span class="block text-[9px] text-slate-500">${item.date}</span>
+                    </div>
+                    <span class="text-[10px] font-bold ${item.status.includes('✅') ? 'text-emerald-400' : 'text-red-400'}">${item.status}</span>
+                </div>
+            `).join('');
         }
 
-        function copyPwd() {
-            const pwd = document.getElementById('generated-pwd').innerText;
-            navigator.clipboard.writeText(pwd);
-            tg.showAlert("Parol nusxalandi!");
+        function clearHistory() {
+            triggerHaptic();
+            localStorage.removeItem('cyber_history');
+            renderHistory();
         }
 
         // Link Skaner
         function processLinkCheck() {
+            triggerHaptic();
             const input = document.getElementById('link-input').value;
             const res = document.getElementById('link-result');
-            if(!input) return;
+            if (!input) return;
             res.classList.remove('hidden');
             res.innerHTML = `<span class="text-amber-400">⏳ Tahlil qilinmoqda...</span>`;
             setTimeout(() => {
-                res.innerHTML = `<span class="text-emerald-400">✅ Havola xavfsiz deb topildi (VirusTotal Score: 0/90).</span>`;
-            }, 1200);
+                res.innerHTML = `<span class="text-emerald-400">✅ Havola xavfsiz deb topildi (VirusTotal: 0/90).</span>`;
+                saveToHistory('Link', input, '✅ Xavfsiz');
+            }, 1000);
+        }
+
+        // Parol Generator
+        function generatePwd() {
+            triggerHaptic();
+            const chars = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789!@#$%^&*";
+            let pwd = "";
+            for (let i = 0; i < 16; i++) pwd += chars.charAt(Math.floor(Math.random() * chars.length));
+            document.getElementById('generated-pwd').innerText = pwd;
+            saveToHistory('Parol', pwd, '✅ Yaratildi');
+        }
+
+        function copyPwd() {
+            triggerHaptic();
+            const pwd = document.getElementById('generated-pwd').innerText;
+            navigator.clipboard.writeText(pwd);
+            if (tg.showAlert) tg.showAlert("Parol nusxalandi!");
         }
 
         // SMS Analizator
         function analyzeSMS() {
+            triggerHaptic();
             const txt = document.getElementById('sms-text').value.toLowerCase();
             const res = document.getElementById('sms-result');
-            if(!txt) return;
+            if (!txt) return;
             res.classList.remove('hidden');
-            if(txt.includes('yutuq') || txt.includes('karta') || txt.includes('kod')) {
-                res.innerHTML = `<span class="text-red-400 font-bold">⚠️ DIQQAT! Bu firibgarlik (scam) bo'lish ehtimoli yuqori!</span>`;
+            if (txt.includes('yutuq') || txt.includes('karta') || txt.includes('kod')) {
+                res.innerHTML = `<span class="text-red-400 font-bold">⚠️ DIQQAT! Bu firibgarlik (scam) ehtimoli yuqori!</span>`;
+                saveToHistory('SMS', txt.substring(0, 15) + '...', '⚠️ Scam');
             } else {
                 res.innerHTML = `<span class="text-emerald-400">✅ Aniq firibgarlik belgilari topilmadi.</span>`;
+                saveToHistory('SMS', txt.substring(0, 15) + '...', '✅ Xavfsiz');
             }
         }
 
-        // Qora Ro'yxat Qidiruv
+        // Blacklist Search
         function searchBlacklist() {
+            triggerHaptic();
             const val = document.getElementById('bl-input').value;
             const res = document.getElementById('bl-result');
-            if(!val) return;
+            if (!val) return;
             res.classList.remove('hidden');
-            res.innerHTML = `<span class="text-emerald-400">✅ Bu raqam/karta bazadagi qora ro'yxatda topilmadi.</span>`;
-        }
-
-        // URL Unpacker
-        function unpackUrl() {
-            const val = document.getElementById('short-url-input').value;
-            const res = document.getElementById('unpack-result');
-            if(!val) return;
-            res.classList.remove('hidden');
-            res.innerHTML = `<span>Asl manzil: <strong class="text-sky-400">https://orijinal-sayt.uz/secure</strong></span>`;
+            res.innerHTML = `<span class="text-emerald-400">✅ Bazadan topilmadi (Toza).</span>`;
+            saveToHistory('Qora Ro\'yxat', val, '✅ Toza');
         }
 
         // AI Chat
         function sendAiMsg() {
+            triggerHaptic();
             const input = document.getElementById('ai-msg');
             const box = document.getElementById('chat-box');
-            if(!input.value) return;
-            
+            if (!input.value) return;
             box.innerHTML += `<div class="bg-slate-800 text-slate-200 p-2 rounded-lg text-right">${input.value}</div>`;
-            const userText = input.value;
             input.value = "";
-            
             setTimeout(() => {
-                box.innerHTML += `<div class="bg-sky-500/10 text-sky-300 p-2 rounded-lg">Kiberxavfsizlik bo'yicha tavsiya: Hech qachon SMS kodlarni begona shaxslarga bermang!</div>`;
+                box.innerHTML += `<div class="bg-sky-500/10 text-sky-300 p-2 rounded-lg">Kiberxavfsizlik maslahati: Notanish ilovalarga SMS o'qish ruxsatini bermang!</div>`;
                 box.scrollTop = box.scrollHeight;
             }, 800);
+        }
+
+        // Viktorina
+        function checkQuiz(isCorrect) {
+            triggerHaptic();
+            const res = document.getElementById('quiz-result');
+            res.classList.remove('hidden');
+            if (isCorrect) {
+                res.className = "text-xs p-2 rounded-xl bg-emerald-500/20 text-emerald-300 border border-emerald-500/40";
+                res.innerText = "To'g'ri javob! +10 kiber-ball berildi.";
+                userPoints += 10;
+                updatePointsDisplay();
+            } else {
+                res.className = "text-xs p-2 rounded-xl bg-red-500/20 text-red-300 border border-red-500/40";
+                res.innerText = "Noto'g'ri! Hech qachon bank SMS kodlarini begonalarga bermang.";
+            }
         }
     </script>
 </body>
